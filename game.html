@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Guessing Game</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Number Guessing Game</h1>
+  <p>Guess a number between 1 and 10</p>
+  <input type="text" id="userGuess" placeholder="Enter your guess">
+  <button onclick="checkGuess()">Submit Guess</button>
+  <p id="message"></p>
+  <p>Chances left: <span id="chances">3</span></p>
+  <button id="retryButton" onclick="retryGame()" disabled>Retry</button>
+
+  <script>
+    // Generate a random number between 1 and 10
+    let correctNumber = Math.floor(Math.random() * 10) + 1;
+    let remainingChances = 3;
+
+    function checkGuess() {
+      const userGuessInput = document.getElementById('userGuess');
+      const userGuess = parseInt(userGuessInput.value);
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+        setMessage('Please enter a valid number between 1 and 10.');
+        return;
+      }
+
+      if (userGuess === correctNumber) {
+        setMessage('Congratulations! You guessed the correct number.');
+        disableInputAndButton();
+      } else {
+        remainingChances--;
+        if (remainingChances > 0) {
+          setMessage(`Incorrect guess. ${userGuess < correctNumber ? 'Try a higher' : 'Try a lower'} number. Chances left: ${remainingChances}`);
+        } else {
+          setMessage(`Sorry, you ran out of chances. The correct number was ${correctNumber}.`);
+          disableInputAndButton();
+        }
+      }
+
+      updateChancesDisplay();
+    }
+
+    function setMessage(message) {
+      document.getElementById('message').textContent = message;
+    }
+
+    function updateChancesDisplay() {
+      document.getElementById('chances').textContent = remainingChances;
+      if (remainingChances === 0) {
+        document.getElementById('retryButton').disabled = false;
+      }
+    }
+
+    function disableInputAndButton() {
+      document.getElementById('userGuess').disabled = true;
+      document.querySelector('button').disabled = true;
+    }
+
+    function retryGame() {
+      // Reset the game
+      remainingChances = 3;
+      correctNumber = Math.floor(Math.random() * 10) + 1;
+
+      // Reset UI elements
+      document.getElementById('userGuess').value = '';
+      document.getElementById('userGuess').disabled = false;
+      document.querySelector('button').disabled = false;
+      document.getElementById('message').textContent = '';
+      document.getElementById('chances').textContent = remainingChances;
+      document.getElementById('retryButton').disabled = true;
+    }
+  </script>
+</body>
+</html>
+
